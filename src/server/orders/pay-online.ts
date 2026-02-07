@@ -8,7 +8,7 @@ export async function payOnlineOrder(cartId:string , shippingAddress:shippingAdd
     if(!token){
         throw new Error('Unauthorized')
     }
-    const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=http://localhost:3000 `,{
+    const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=https://mody-mart.vercel.app `,{
         method:'POST' , 
         headers:{
             token: token , 
