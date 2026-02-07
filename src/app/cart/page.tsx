@@ -70,7 +70,7 @@ export default function cart() {
   }
 
   // ================= EMPTY STATE =================
-  if (!cartData || cartData.numOfCartItems === 0) {
+  if (!cartData || (cartData.numOfCartItems ?? 0) === 0) {
     return (
       <div className="max-w-3xl mx-auto py-24 text-center space-y-6">
         <div className="mx-auto w-20 h-20 rounded-full bg-muted flex items-center justify-center">
@@ -106,7 +106,7 @@ export default function cart() {
           </thead>
 
           <tbody>
-            {cartData.data.products.map((prod) => (
+            {cartData.data?.products.map((prod) => (
               <tr
                 key={prod._id}
                 className="border-b hover:bg-muted/40 transition"
@@ -188,18 +188,18 @@ export default function cart() {
 
         <div className="flex justify-between text-sm">
           <span>Items</span>
-          <span>{cartData.numOfCartItems}</span>
+          <span>{cartData.numOfCartItems ?? 0}</span>
         </div>
 
         <div className="flex justify-between text-sm">
           <span>Total</span>
           <span className="font-semibold">
-            {cartData.data.totalCartPrice} EGP
+            {cartData.data?.totalCartPrice ?? 0} EGP
           </span>
         </div>
 
         <Button asChild className="btn-primary w-full mt-4">
-          <Link href={`/checkout/${cartData.cartId}`}>
+          <Link href={`/checkout/${cartData.cartId ?? ''}`}>
             Proceed to Checkout
           </Link>
         </Button>
