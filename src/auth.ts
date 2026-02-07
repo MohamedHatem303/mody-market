@@ -1,99 +1,93 @@
-import { NextAuthOptions } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import { failedlogin, successlogin } from "./types/authInterface"
+import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
 
-/* =========================
-   Type Augmentation
-========================= */
-declare module "next-auth" {
-  interface Session {
-    user: any
-    accessToken?: string
-  }
+type ApiSuccess = { user: any; token: string };
+type ApiFail = { message?: string };
 
-  interface User {
-    id: string
-    userData?: any
-    accessToken?: string
-  }
-}
+type MyToken = JWT & {
+  accessToken?: string;
+  user?: any;
+};
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    user?: any
-    accessToken?: string
-  }
-}
-
-/* =========================
-   Auth Options
-========================= */
 export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-
   providers: [
-    Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { type: "text" },
-        password: { type: "password" },
+        email: { label: "Email", type: "text", placeholder: "you@example.com" },
+        password: { label: "Password", type: "password" },
       },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
 
-      authorize: async (credentials) => {
-        if (!credentials?.email || !credentials?.password) {
-          return null
+        const res = await fetch(`${process.env.API}/auth/signin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+          }),
+        });
+
+        // parse body safely
+        const payload: ApiSuccess | ApiFail = await res.json().catch(() => ({}));
+
+        // if response not ok -> return null to indicate failure
+        if (!res.ok) {
+          // optionally: throw new Error((payload as ApiFail).message || "Login failed");
+          return null;
         }
 
-        const response = await fetch(
-          `${process.env.Api}/auth/signin`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: credentials.email,
-              password: credentials.password,
-            }),
-          }
-        )
+        // success shape expected: { user: {...}, token: "..." }
+        if ((payload as ApiSuccess).token && (payload as ApiSuccess).user) {
+          const success = payload as ApiSuccess;
 
-        if (!response.ok) {
-          return null
-        }
-
-        const payload: failedlogin | successlogin = await response.json()
-
-        if ("token" in payload) {
+          // Return a user object that will be available in jwt callback as `user`
+          // include accessToken so we can persist it in the JWT
           return {
-            // 👈 لازم id حتى لو الباك مبيبعتهوش
-            id: payload.user.email, // email = unique id
-
-            accessToken: payload.token,
-            userData: payload.user,
-          }
+            id: success.user.email ?? success.user._id ?? "unknown",
+            ...success.user,
+            accessToken: success.token,
+          };
         }
 
-        return null
+        return null;
       },
     }),
   ],
-
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    async jwt({ token, user }) {
+    // called on sign in and every jwt update
+    async jwt({ token, user }): Promise<MyToken> {
+      const t = token as MyToken;
       if (user) {
-        token.user = user.userData
-        token.accessToken = user.accessToken
+        // `user` is the object we returned from authorize()
+        t.user = user;
+        // attach access token if present
+        if ((user as any).accessToken) t.accessToken = (user as any).accessToken;
       }
-      return token
+      return t;
     },
 
+    // called when `getSession()` or `useSession()` is called on the client
     async session({ session, token }) {
-      session.user = token.user
-      session.accessToken = token.accessToken
-      return session
+      const t = token as MyToken;
+      // put the original user object (or a subset) on session.user
+      if (t.user) session.user = t.user;
+      // attach access token for client usage if needed
+      (session as any).accessToken = t.accessToken;
+      return session;
     },
   },
-}
+  // keep this set in env for production
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+// Export default for the NextAuth route
+export default NextAuth(authOptions);
