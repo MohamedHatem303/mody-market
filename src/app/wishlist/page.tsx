@@ -29,7 +29,7 @@ export default function Wishlist() {
     <>
 
       {/* WHEN HAVE ITEMS */}
-      {wishlistData?.count > 0 && (
+      {(wishlistData?.count ?? 0) > 0 && (
         <div className="grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mt-5">
           {wishlistItem.map((prod) => (
             <ProductCard key={prod._id} prod={prod} />
@@ -38,7 +38,7 @@ export default function Wishlist() {
       )}
 
       {/* EMPTY STATE */}
-      {wishlistData?.count === 0 && (
+      {(wishlistData?.count ?? 0) === 0 && (
         <div className="flex flex-col items-center justify-center mt-24 text-center">
 
           {/* Icon */}
