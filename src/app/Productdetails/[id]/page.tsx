@@ -19,8 +19,9 @@ type myProps = {
 }
 
 /* ===== util: format big numbers (sold) ===== */
-function getBeforeDot(value: string | number): string {
-  return value.toString().split(".")[0]
+function getBeforeDot(value?: string | number) {
+  if (value === undefined) return 0
+  return value.toString().split('.')[0]
 }
 
 export default async function productdetails(props: myProps) {
