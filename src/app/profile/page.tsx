@@ -1,42 +1,76 @@
-import { getAccessToken } from '@/schema/access-token'
-import ProfilePage from '../_componets/ProfilePage/ProfilePage'
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
+import ProfilePage from "../_componets/ProfilePage/ProfilePage"
 
 export default async function Page() {
+  // 1️⃣ get session
+  const session: any = await getServerSession(authOptions)
 
-  // 1) get token
-  const token = await getAccessToken()
-  console.log(token);
-  
+  if (!session || !session.accessToken) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Not authenticated
+      </div>
+    )
+  }
 
-  // 2) verify token
+  const token = session.accessToken
+
+  // 2️⃣ verify token (عشان نجيب الـ real user id)
   const verifyRes = await fetch(
-    'https://ecommerce.routemisr.com/api/v1/auth/verifyToken',
+    "https://ecommerce.routemisr.com/api/v1/auth/verifyToken",
     {
-      headers: {
-        token: token || ''
-      }
+      headers: { token },
+      cache: "no-store",
     }
   )
 
-  const verifyData = await verifyRes.json()
-  const userId = verifyData?.decoded?.id
-  console.log('هنا ',userId);
-  
-
-  // 3) get user orders
-  let orders: any[] = []
-
-  if (userId) {
-    const ordersRes = await fetch(
-      `https://ecommerce.routemisr.com/api/v1/orders/user/${userId}`
+  if (!verifyRes.ok) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        Invalid session
+      </div>
     )
-
-    const ordersData = await ordersRes.json()
-    orders = ordersData
   }
 
-  // 4) send orders + token
+  const verifyData = await verifyRes.json()
+  const realUserId = verifyData?.decoded?.id
+
+  if (!realUserId) {
+    return (
+      <div className="p-10 text-center text-red-500">
+        User not found
+      </div>
+    )
+  }
+
+  // 3️⃣ get orders (RouteMisr بيرجع Array مباشرة)
+  const ordersRes = await fetch(
+    `https://ecommerce.routemisr.com/api/v1/orders/user/${realUserId}`,
+    {
+      headers: { token },
+      cache: "no-store",
+    }
+  )
+
+  if (!ordersRes.ok) {
+    const errText = await ordersRes.text()
+    console.error("ORDERS ERROR:", errText)
+
+    return (
+      <div className="p-10 text-center text-red-500">
+        Failed to load orders
+      </div>
+    )
+  }
+
+  const orders = await ordersRes.json() // ✅ Array مباشرة
+
+  // 4️⃣ render profile
   return (
-    <ProfilePage ordersProp={orders} token={token || ''} />
+    <ProfilePage
+      ordersProp={orders}
+      token={token}
+    />
   )
 }

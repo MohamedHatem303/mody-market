@@ -1,21 +1,31 @@
-'use server';
-import { getAccessToken } from "@/schema/access-token";
-import { decode } from "next-auth/jwt";
-import { cookies } from "next/headers";
-import { json } from "zod";
+// 'use server';
+// import { getAccessToken } from "@/schema/access-token";
+// import { decode } from "next-auth/jwt";
+// import { cookies } from "next/headers";
+// import { json } from "zod";
 
-export async function clearCart(){
-    const token = await getAccessToken()
-    if(!token){
-        throw new Error('Unauthorized')
-    }
-    const response = await fetch(`${process.env.API}/cart`,{
-        method:'DELETE' , 
-        headers:{
-            token: token , 
-            'Content-Type':'application/json'
-        } 
-        })
-        const payload = await response.json()
-        return payload
+// export async function clearCart(){
+//     const token = await getAccessToken()
+//     if(!token){
+//         throw new Error('Unauthorized')
+//     }
+//     const response = await fetch(`${process.env.API}/cart`,{
+//         method:'DELETE' , 
+//         headers:{
+//             token: token , 
+//             'Content-Type':'application/json'
+//         } 
+//         })
+//         const payload = await response.json()
+//         return payload
+// }
+export async function clearCart() {
+  const res = await fetch("/api/cart", {
+    method: "PATCH",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data;
 }
