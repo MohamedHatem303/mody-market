@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import marketImage from "../../aassets/images/ModyMarketLogo.png";
+import marketImage  from "../../../aassets/images/ModyMarketLogo.png";
 import { motion } from "framer-motion";
 
 export default function Home() {
