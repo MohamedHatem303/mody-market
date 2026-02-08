@@ -58,7 +58,7 @@ export default function ProductsPage() {
 
       {/* Loading Skeleton */}
       {loading && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {Array.from({ length: 10 }).map((_, i) => (
             <div
               key={i}
@@ -88,7 +88,7 @@ export default function ProductsPage() {
 
       {/* Products Grid */}
       {!loading && products.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {products.map((prod) => (
             <div
               key={prod._id}
