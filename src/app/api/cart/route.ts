@@ -16,6 +16,9 @@
 //     const payload = await res.json()
 //     return NextResponse.json(payload)
 // }
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/auth";
@@ -80,7 +83,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   const session: any = await getServerSession(authOptions);
 
-  if (!session || !session.accessToken) {
+  if (!session?.accessToken) {
     return NextResponse.json(
       { message: "You are not logged in" },
       { status: 401 }
@@ -88,18 +91,16 @@ export async function PUT(req: Request) {
   }
 
   const body = await req.json();
-
   const cartItemId = body.cartItemId;
-  const count = body.count;
+  const count = Number(body.count);
 
-  if (!cartItemId || typeof count !== "number") {
+  if (!cartItemId || Number.isNaN(count)) {
     return NextResponse.json(
       { message: "Invalid update cart payload", body },
       { status: 400 }
     );
   }
 
-  // 🔥 ID في الـ URL + count في الـ body
   const res = await fetch(
     `${process.env.API}/cart/${cartItemId}`,
     {
@@ -108,13 +109,17 @@ export async function PUT(req: Request) {
         "Content-Type": "application/json",
         token: session.accessToken,
       },
-      body: JSON.stringify({ count }),
+      body: JSON.stringify({
+        count: String(count),
+      }),
     }
   );
 
-  const payload = await res.json();
-  return NextResponse.json(payload, { status: res.status });
+  const data = await res.json();
+  return NextResponse.json(data, { status: res.status });
 }
+
+
 
 /**
  * DELETE → حذف عنصر من الكارت

@@ -1,25 +1,32 @@
 'use client'
 import { clearCart } from '@/server/cart/clear-cart'
 import { deleteCartItem } from '@/server/cart/delete-cart-item'
-import { updateCart } from '@/server/cart/update-cart'
 import { CartResponse } from '@/types/cart-response'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useSession } from "next-auth/react";
+import { updateCartItem } from '@/server/cart/update-cart'
 
 export default function cart() {
   const queryClient = useQueryClient()
+  const { data: session } = useSession();
+
 
   const { data: cartData, isLoading, isError } = useQuery<CartResponse>({
-    queryKey: ['get-cart'],
-    queryFn: async () => {
-      const response = await fetch('/api/cart')
-      const payload = await response.json()
-      return payload
-    }
-  })
+  queryKey: ['get-cart'],
+  queryFn: async () => {
+    const response = await fetch('/api/cart', {
+      credentials: 'include', // 👈 السطر المهم
+    })
+
+    const payload = await response.json()
+    return payload
+  }
+})
+
 
   const { mutate: delCartItem } = useMutation({
     mutationKey: ['delete-cart-item'],
@@ -33,16 +40,22 @@ export default function cart() {
     }
   })
 
-  const { mutate: updateCartMutation  } = useMutation({
-    mutationKey: ['update-cart-item'],
-    mutationFn: updateCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-cart'] })
-    },
-    onError: () => {
-      toast.error('Error updating item in cart')
-    }
-  })
+  const { mutate: updateCartMutation } = useMutation({
+  mutationKey: ['update-cart-item'],
+  mutationFn: ({ cartItemId, count }: { cartItemId: string; count: number }) =>
+    updateCartItem({
+  cartItemId,
+  count,
+})
+,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['get-cart'] })
+  },
+  onError: (err: any) => {
+    toast.error(err?.message || 'Error updating item in cart')
+  }
+})
+
 
   const { mutate: clearCartMutation } = useMutation({
     mutationKey: ['clear-cart'],
@@ -57,9 +70,15 @@ export default function cart() {
   })
 
   function handleUpdateCartItem(cartItemId: string, count: number) {
-  if (count < 1) return
-  updateCartMutation({ cartItemId, count })
+  if (count < 1) return;
+
+  updateCartMutation({
+  cartItemId,
+  count,
+});
+
 }
+
 
 
   if (isLoading) {
@@ -128,10 +147,11 @@ export default function cart() {
                     <button
                       onClick={() =>
   handleUpdateCartItem(
-    prod._id,
+    prod.product._id, // ← product id
     prod.count - 1
   )
 }
+
 
                       className="w-7 h-7 rounded-full border hover:bg-muted"
                     >
@@ -143,10 +163,11 @@ export default function cart() {
                     <button
                       onClick={() =>
   handleUpdateCartItem(
-    prod._id,        // 👈 cart item id
+    prod.product._id, // ← product id
     prod.count + 1
   )
 }
+
 
                       className="w-7 h-7 rounded-full border hover:bg-muted"
                     >

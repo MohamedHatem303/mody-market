@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/auth"
 import ProfilePage from "../_componets/ProfilePage/ProfilePage"
-
 export default async function Page() {
   // 1️⃣ get session
   const session: any = await getServerSession(authOptions)
