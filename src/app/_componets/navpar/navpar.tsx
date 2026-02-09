@@ -7,10 +7,12 @@ import { signOut, useSession } from "next-auth/react";
 import { DropdownMenuBasic } from "../dropDown/dropDown";
 import { useQuery } from "@tanstack/react-query";
 import { CartResponse } from "@/types/cart-response";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   function toggleNav() {
     setIsOpen(!isOpen);
@@ -50,18 +52,25 @@ export default function Navbar() {
           </div>
 
           <ul className="hidden md:flex flex-1 justify-center items-center gap-6">
-            {path.map((elem) => (
-              <li key={elem.content}>
-                <Link
-                  href={elem.href}
-                  className="text-sm font-medium px-3 py-2 rounded-xl hover:bg-accent hover:text-primary transition"
-                >
-                  {elem.content}
-                </Link>
-              </li>
-            ))}
+            {path.map((elem) => {
+              const isActive = pathname.startsWith(elem.href);
+              return (
+                <li key={elem.content}>
+                  <Link
+                    href={elem.href}
+                    className={`text-sm font-medium px-3 py-2 rounded-xl transition
+                      ${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "hover:bg-accent hover:text-primary"
+                      }`}
+                  >
+                    {elem.content}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
-
           <div className="flex items-center gap-3 ml-auto">
             {status === "authenticated" ? (
               <>
@@ -129,17 +138,22 @@ export default function Navbar() {
         {isOpen && (
           <div className="md:hidden absolute top-16 inset-x-0 bg-background border-b">
             <ul className="flex flex-col items-center gap-4 p-4">
-              {path.map((elem) => (
-                <li key={elem.content}>
-                  <Link
-                    href={elem.href}
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm font-medium"
-                  >
-                    {elem.content}
-                  </Link>
-                </li>
-              ))}
+              {path.map((elem) => {
+                const isActive = pathname.startsWith(elem.href);
+
+                return (
+                  <li key={elem.content}>
+                    <Link
+                      href={elem.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`text-sm font-medium px-3 py-2 rounded-xl
+                      ${isActive ? "text-primary font-bold" : ""}`}
+                    >
+                      {elem.content}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
