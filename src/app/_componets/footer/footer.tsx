@@ -68,7 +68,7 @@ export default function footer() {
           <span>
             © {new Date().getFullYear()} Mody Mart. All rights reserved.
           </span>
-          <span className="text-xs">Built with ❤️ by Eng Mohamed Hatem</span>
+          <span className="text-xs">Designed and developed by Eng Mohamed Hatem</span>
         </div>
       </div>
     </footer>
