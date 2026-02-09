@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useRef, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -50,14 +50,14 @@ function SmallDropdown({ prod }: { prod: ProductItem }) {
   return (
     <div ref={ref} className="relative inline-block">
       <button
-  type="button"
-  onClick={(e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setOpen((prev) => !prev)
-  }}
-  className="ml-2 inline-flex items-center justify-center rounded-full p-1 hover:bg-muted transition"
->
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((prev) => !prev);
+        }}
+        className="ml-2 inline-flex items-center justify-center rounded-full p-1 hover:bg-muted transition"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import {
   Carousel,
@@ -9,18 +9,16 @@ import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 
 type Props = {
-  images?: string[]
-}
+  images?: string[];
+};
 
 export default function productimg({ images }: Props) {
-
-  // 🛡️ safety check
   if (!Array.isArray(images) || images.length === 0) {
     return (
       <div className="w-full aspect-[4/5] rounded-xl border bg-muted flex items-center justify-center text-muted-foreground">
         No product images
       </div>
-    )
+    );
   }
 
   return (
@@ -36,7 +34,6 @@ export default function productimg({ images }: Props) {
       <CarouselContent>
         {images.map((src, index) => (
           <CarouselItem key={index}>
-            {/* 👇 container بنسبة أبعاد ثابتة */}
             <div className="relative w-full aspect-[4/5] overflow-hidden rounded-xl bg-muted">
               <Image
                 src={src}

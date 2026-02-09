@@ -1,34 +1,34 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { wishlistResponse, wishlistResponseItem } from '@/types/wishlist-response'
-import { ProductCard } from '../_componets/productCard/page'
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  wishlistResponse,
+  wishlistResponseItem,
+} from "@/types/wishlist-response";
+import { ProductCard } from "../_componets/productCard/page";
 
 export default function Wishlist() {
-
-  const [wishlistItem, setWishlistItem] = useState<wishlistResponseItem[]>([])
+  const [wishlistItem, setWishlistItem] = useState<wishlistResponseItem[]>([]);
 
   const { data: wishlistData } = useQuery<wishlistResponse>({
-    queryKey: ['get-wishlist'],
+    queryKey: ["get-wishlist"],
     queryFn: async () => {
-      const response = await fetch('/api/wishlist')
-      return response.json()
-    }
-  })
+      const response = await fetch("/api/wishlist");
+      return response.json();
+    },
+  });
 
   useEffect(() => {
     if (wishlistData?.data) {
-      setWishlistItem(wishlistData.data)
+      setWishlistItem(wishlistData.data);
     }
-  }, [wishlistData])
+  }, [wishlistData]);
 
   return (
     <>
-
-      {/* WHEN HAVE ITEMS */}
       {(wishlistData?.count ?? 0) > 0 && (
         <div className="grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mt-5">
           {wishlistItem.map((prod) => (
@@ -37,11 +37,8 @@ export default function Wishlist() {
         </div>
       )}
 
-      {/* EMPTY STATE */}
       {(wishlistData?.count ?? 0) === 0 && (
         <div className="flex flex-col items-center justify-center mt-24 text-center">
-
-          {/* Icon */}
           <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +56,6 @@ export default function Wishlist() {
             </svg>
           </div>
 
-          {/* Text */}
           <h2 className="text-xl font-semibold text-gray-800">
             Your wishlist is empty
           </h2>
@@ -68,16 +64,11 @@ export default function Wishlist() {
             Browse products and add your favorites ❤️
           </p>
 
-          {/* Button */}
           <Link href="/products">
-            <Button className="mt-6">
-              Explore Products
-            </Button>
+            <Button className="mt-6">Explore Products</Button>
           </Link>
-
         </div>
       )}
-
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { addToCart } from "@/server/cart/add-prod-cart";
@@ -12,40 +12,44 @@ export default function AddBtn({ productId }: { productId: string }) {
 
   const wishlistData: any = queryClient.getQueryData(["get-wishlist"]);
   const isInWishlist = wishlistData?.data?.some(
-    (item: any) => item._id === productId
+    (item: any) => item._id === productId,
   );
 
   const { mutate: addProductToCart, isPending } = useMutation({
     mutationFn: addToCart,
     onSuccess: (data) => {
       toast.success(data?.message);
-      queryClient.invalidateQueries({ queryKey: ['get-cart'] });
+      queryClient.invalidateQueries({ queryKey: ["get-cart"] });
     },
     onError: () => {
-      toast.error('login to add to cart');
-    }
-  });
-
-  const { mutate: addProductToWishlist, isPending: wishlistPending } = useMutation({
-    mutationFn: addToWishlist,
-    onSuccess: (data) => {
-      toast.success(data?.message);
-      queryClient.invalidateQueries({ queryKey: ['get-wishlist'] });
+      toast.error("login to add to cart");
     },
-    onError: () => {
-      toast.error('login to add to Wishlist');
-    }
   });
 
-  const { mutate: removeProductFromWishlist, isPending: removeWishlistPending } = useMutation({
+  const { mutate: addProductToWishlist, isPending: wishlistPending } =
+    useMutation({
+      mutationFn: addToWishlist,
+      onSuccess: (data) => {
+        toast.success(data?.message);
+        queryClient.invalidateQueries({ queryKey: ["get-wishlist"] });
+      },
+      onError: () => {
+        toast.error("login to add to Wishlist");
+      },
+    });
+
+  const {
+    mutate: removeProductFromWishlist,
+    isPending: removeWishlistPending,
+  } = useMutation({
     mutationFn: removeFromWishlist,
     onSuccess: (data) => {
       toast.success(data?.message);
-      queryClient.invalidateQueries({ queryKey: ['get-wishlist'] });
+      queryClient.invalidateQueries({ queryKey: ["get-wishlist"] });
     },
     onError: () => {
-      toast.error('login to add to Wishlist');
-    }
+      toast.error("login to add to Wishlist");
+    },
   });
 
   const handleWishlist = () => {
@@ -58,13 +62,12 @@ export default function AddBtn({ productId }: { productId: string }) {
 
   return (
     <CardFooter className="flex items-center justify-between gap-3 pt-0">
-      
       <Button
         onClick={() => addProductToCart(productId)}
         disabled={isPending}
         className="flex-1 rounded-xl transition-all active:scale-95"
       >
-        {isPending ? 'Adding...' : 'Add to Cart'}
+        {isPending ? "Adding..." : "Add to Cart"}
       </Button>
 
       <Button
@@ -72,7 +75,7 @@ export default function AddBtn({ productId }: { productId: string }) {
         onClick={handleWishlist}
         disabled={wishlistPending || removeWishlistPending}
         className={`rounded-xl p-2 transition-all active:scale-95 ${
-          isInWishlist ? 'text-primary border-primary' : ''
+          isInWishlist ? "text-primary border-primary" : ""
         }`}
       >
         <svg
@@ -81,9 +84,7 @@ export default function AddBtn({ productId }: { productId: string }) {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className={`w-6 h-6 transition ${
-            isInWishlist ? 'text-primary' : ''
-          }`}
+          className={`w-6 h-6 transition ${isInWishlist ? "text-primary" : ""}`}
         >
           <path
             strokeLinecap="round"
@@ -92,7 +93,6 @@ export default function AddBtn({ productId }: { productId: string }) {
           />
         </svg>
       </Button>
-
     </CardFooter>
   );
 }

@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -7,67 +7,76 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import Link from "next/link"
-import { ProductItem } from '@/types/ProductInterface'
-import React from 'react'
-import Productimg from "@/app/_componets/productimg/productimg"
-import AddBtn from "../../_componets/addBtn/addBtn"
+} from "@/components/ui/card";
+import Link from "next/link";
+import { ProductItem } from "@/types/ProductInterface";
+import React from "react";
+import Productimg from "@/app/_componets/productimg/productimg";
+import AddBtn from "../../_componets/addBtn/addBtn";
 
 type myProps = {
-  params: { id: string }
-}
+  params: { id: string };
+};
 
-/* ===== util: format big numbers (sold) ===== */
 function getBeforeDot(value?: string | number) {
-  if (value === undefined) return 0
-  return value.toString().split('.')[0]
+  if (value === undefined) return 0;
+  return value.toString().split(".")[0];
 }
 
 export default async function productdetails(props: myProps) {
-  let { id } = await props.params
-  let response = await fetch(`https://ecommerce.routemisr.com/api/v1/products/${id}`)
-  let { data: singleProduct }: { data: ProductItem } = await response.json()
+  let { id } = await props.params;
+  let response = await fetch(
+    `https://ecommerce.routemisr.com/api/v1/products/${id}`,
+  );
+  let { data: singleProduct }: { data: ProductItem } = await response.json();
 
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
-
-        {/* Image */}
         <div className="md:col-span-1">
           <div className="rounded-2xl bg-white shadow-md p-4">
             <Productimg images={singleProduct?.images ?? []} />
           </div>
         </div>
 
-        {/* Details */}
         <div className="md:col-span-2">
           <Card className="rounded-2xl shadow-lg">
-
-            {/* ===== Header ===== */}
             <CardHeader className="space-y-5">
-
-              {/* Badges */}
               <div className="flex flex-wrap gap-2">
                 <Link href={`/products?brand=${singleProduct.brand._id}`}>
-                  <Badge className="hover:bg-[#5a0f1b] hover:text-white" variant="secondary">{singleProduct.brand.name}</Badge>
+                  <Badge
+                    className="hover:bg-[#5a0f1b] hover:text-white"
+                    variant="secondary"
+                  >
+                    {singleProduct.brand.name}
+                  </Badge>
                 </Link>
 
                 <Link href={`/products?category=${singleProduct.category._id}`}>
-                  <Badge className="hover:bg-[#5a0f1b] hover:text-white" variant="secondary">{singleProduct.category.name}</Badge>
+                  <Badge
+                    className="hover:bg-[#5a0f1b] hover:text-white"
+                    variant="secondary"
+                  >
+                    {singleProduct.category.name}
+                  </Badge>
                 </Link>
 
-                <Link href={`/products?category=${singleProduct.subcategory[0].category}`}>
-                  <Badge className="hover:bg-[#5a0f1b] hover:text-white" variant="secondary">{singleProduct.subcategory[0].name}</Badge>
+                <Link
+                  href={`/products?category=${singleProduct.subcategory[0].category}`}
+                >
+                  <Badge
+                    className="hover:bg-[#5a0f1b] hover:text-white"
+                    variant="secondary"
+                  >
+                    {singleProduct.subcategory[0].name}
+                  </Badge>
                 </Link>
               </div>
 
-              {/* Title */}
               <CardTitle className="text-2xl font-bold leading-tight">
                 {singleProduct.title}
               </CardTitle>
 
-              {/* Stats */}
               <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
                 <span>
                   <span className="font-semibold text-foreground">
@@ -75,13 +84,9 @@ export default async function productdetails(props: myProps) {
                   </span>
                 </span>
 
-                <span>
-                  {getBeforeDot(singleProduct.sold)} sold
-                </span>
+                <span>{getBeforeDot(singleProduct.sold)} sold</span>
 
-                <span>
-                  {singleProduct.ratingsQuantity} reviews
-                </span>
+                <span>{singleProduct.ratingsQuantity} reviews</span>
 
                 <span className="flex items-center gap-1 text-foreground">
                   {singleProduct.ratingsAverage}
@@ -97,7 +102,6 @@ export default async function productdetails(props: myProps) {
               </div>
             </CardHeader>
 
-            {/* ===== Body ===== */}
             <div className="px-6 space-y-5">
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {singleProduct.description}
@@ -108,11 +112,9 @@ export default async function productdetails(props: myProps) {
                   <span className="text-muted-foreground">In stock</span>
                   <div className="font-semibold">{singleProduct.quantity}</div>
                 </div>
-
               </div>
             </div>
 
-            {/* ===== Footer ===== */}
             <CardFooter className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 py-5">
               <div className="text-2xl font-bold">
                 {singleProduct.price}
@@ -123,10 +125,9 @@ export default async function productdetails(props: myProps) {
                 <AddBtn productId={singleProduct._id} />
               </div>
             </CardFooter>
-
           </Card>
         </div>
       </div>
     </div>
-  )
+  );
 }

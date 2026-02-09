@@ -1,17 +1,12 @@
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Image from "next/image"
-import Link from "next/link"
-import { Brand } from "@/types/cart-response"
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
+import { Brand } from "@/types/cart-response";
 
 export function BrandsCard({ Brand }: { Brand: Brand }) {
   return (
     <Card className="group relative mx-auto w-full max-w-sm overflow-hidden border card-hover">
-      
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
         <Image
           fill
@@ -22,11 +17,12 @@ export function BrandsCard({ Brand }: { Brand: Brand }) {
       </div>
 
       <CardHeader className="space-y-4 text-center">
-        <CardTitle className="text-lg font-semibold">
-          {Brand.name}
-        </CardTitle>
+        <CardTitle className="text-lg font-semibold">{Brand.name}</CardTitle>
 
-        <Button variant="outline" className="w-full gap-2 bg-[#5a0f1b] text-white">
+        <Button
+          variant="outline"
+          className="w-full gap-2 bg-[#5a0f1b] text-white"
+        >
           <Link
             href={`/products?brand=${Brand._id}`}
             className="flex items-center justify-center gap-2 w-full "
@@ -49,7 +45,6 @@ export function BrandsCard({ Brand }: { Brand: Brand }) {
           </Link>
         </Button>
       </CardHeader>
-
     </Card>
-  )
+  );
 }

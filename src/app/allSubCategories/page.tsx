@@ -7,12 +7,15 @@ export default async function AllSubCategories() {
   try {
     const response = await fetch(
       "https://ecommerce.routemisr.com/api/v1/subcategories",
-      { cache: "no-store" }
+      { cache: "no-store" },
     );
 
     if (!response.ok) {
-      // لو الـ API رجّعت خطأ (4xx/5xx) نتعامل معاه بأمان
-      console.error("Subcategories API returned non-OK:", response.status, await response.text());
+      console.error(
+        "Subcategories API returned non-OK:",
+        response.status,
+        await response.text(),
+      );
       return (
         <p className="text-center text-red-500">
           Failed to load sub categories (bad response).
@@ -21,19 +24,20 @@ export default async function AllSubCategories() {
     }
 
     const json = await response.json();
-    // طُرق مختلفة ممكن تكون عليها البيانات من الـ API — نحاول التعامل مع كل الاحتمالات
-    // 1) json.data هو مصفوفة مباشرة
-    // 2) json.data.subcategories هو المصفوفة
-    // 3) json هو مصفوفة مباشرة (نادر)
     let dataCandidate: any = json?.data ?? json ?? [];
 
-    if (json?.data && typeof json.data === "object" && Array.isArray(json.data.subcategories)) {
+    if (
+      json?.data &&
+      typeof json.data === "object" &&
+      Array.isArray(json.data.subcategories)
+    ) {
       dataCandidate = json.data.subcategories;
     }
 
-    const allProducts: subCategorieItem[] = Array.isArray(dataCandidate) ? dataCandidate : [];
+    const allProducts: subCategorieItem[] = Array.isArray(dataCandidate)
+      ? dataCandidate
+      : [];
 
-    // للتصحيح: اطبع شكل الـ json لو احتجت تتبع المشكلة على Vercel
     if (process.env.NODE_ENV !== "production") {
       console.debug("AllSubCategories - fetched json:", JSON.stringify(json));
     }
@@ -57,9 +61,7 @@ export default async function AllSubCategories() {
   } catch (error) {
     console.error("AllSubCategories fetch/render error:", error);
     return (
-      <p className="text-center text-red-500">
-        Failed to load sub categories
-      </p>
+      <p className="text-center text-red-500">Failed to load sub categories</p>
     );
   }
 }

@@ -3,20 +3,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import marketImage  from "../../../aassets/images/ModyMarketLogo.png";
+import marketImage from "../../../aassets/images/ModyMarketLogo.png";
 import { motion } from "framer-motion";
 
 export default function Home() {
   return (
     <section className="relative overflow-hidden">
-      {/* Background Glow */}
       <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-[#7b1626]/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-[#5a0f1b]/20 rounded-full blur-3xl animate-pulse" />
 
       <div className="min-h-[calc(100vh-64px)] flex items-center bg-white relative z-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-          {/* Text */}
           <motion.div
             initial={{ opacity: 0, x: -80 }}
             animate={{ opacity: 1, x: 0 }}
@@ -68,7 +65,6 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -88,7 +84,6 @@ export default function Home() {
               />
             </motion.div>
           </motion.div>
-
         </div>
       </div>
     </section>

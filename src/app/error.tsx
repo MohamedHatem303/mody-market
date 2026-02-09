@@ -13,6 +13,7 @@ export default function GlobalError({
     console.error(error);
   }, [error]);
 
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
       <h2 className="text-2xl font-bold">Something went wrong</h2>

@@ -1,59 +1,36 @@
-// 'use server';
-// import { getAccessToken } from "@/schema/access-token";
-// import { shippingAddress } from "@/types/cart-response";
+"use server";
 
-
-// export async function payOnlineOrder(cartId:string , shippingAddress:shippingAddress){
-//     const token = await getAccessToken()
-//     if(!token){
-//         throw new Error('Unauthorized')
-//     }
-//     const response = await fetch(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=https://mody-mart.vercel.app `,{
-//         method:'POST' , 
-//         headers:{
-//             token: token , 
-//             'Content-Type':'application/json'
-//         } , 
-//         body:JSON.stringify({
-//             shippingAddress
-//         })
-//         })
-//         const payload = await response.json()
-//         return payload
-// }
-'use server'
-
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/auth'
-import { shippingAddress } from '@/types/cart-response'
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
+import { shippingAddress } from "@/types/cart-response";
 
 export async function payOnlineOrder(
   cartId: string,
-  shippingAddress: shippingAddress
+  shippingAddress: shippingAddress,
 ) {
-  const session: any = await getServerSession(authOptions)
+  const session: any = await getServerSession(authOptions);
 
   if (!session?.accessToken) {
-    throw new Error('Unauthorized')
+    throw new Error("Unauthorized");
   }
 
   const res = await fetch(
     `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=https://mody-mart.vercel.app`,
     {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: session.accessToken,
       },
       body: JSON.stringify({ shippingAddress }),
-    }
-  )
+    },
+  );
 
-  const data = await res.json()
+  const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data?.message || 'Online payment failed')
+    throw new Error(data?.message || "Online payment failed");
   }
 
-  return data
+  return data;
 }

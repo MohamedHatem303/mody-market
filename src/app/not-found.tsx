@@ -1,13 +1,11 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Notfound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-
-      {/* ICON */}
       <div className="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center mb-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +23,6 @@ export default function Notfound() {
         </svg>
       </div>
 
-      {/* TEXT */}
       <h1 className="text-4xl font-bold text-gray-800 mb-2">
         404 - Page Not Found
       </h1>
@@ -34,13 +31,9 @@ export default function Notfound() {
         Sorry, the page you are looking for does not exist or has been moved.
       </p>
 
-      {/* BUTTON */}
       <Link href="/">
-        <Button className="mt-6">
-          Back to Home
-        </Button>
+        <Button className="mt-6">Back to Home</Button>
       </Link>
-
     </div>
-  )
+  );
 }

@@ -1,54 +1,53 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { payCashOrder } from '@/server/orders/pay-cash'
-import { payOnlineOrder } from '@/server/orders/pay-online'
-import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { toast } from 'react-hot-toast'
-import { shippingAddress } from '@/types/cart-response'
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { payCashOrder } from "@/server/orders/pay-cash";
+import { payOnlineOrder } from "@/server/orders/pay-online";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { shippingAddress } from "@/types/cart-response";
 
 export default function CheckoutForm({ cartId }: { cartId: string }) {
-  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'online'>('cash')
-  const [isLoading, setIsLoading] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "online">("cash");
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<shippingAddress>({
     defaultValues: {
-      details: '',
-      phone: '',
-      city: '',
+      details: "",
+      phone: "",
+      city: "",
     },
-  })
+  });
 
-  // ✅ SUBMIT الوحيد – مفيش تعريف جوه تعريف
   async function submitForm(values: shippingAddress) {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
 
-      if (paymentMethod === 'online') {
-        const res = await payOnlineOrder(cartId, values)
+      if (paymentMethod === "online") {
+        const res = await payOnlineOrder(cartId, values);
 
-        if (res.status === 'success') {
-          window.location.href = res.session.url
+        if (res.status === "success") {
+          window.location.href = res.session.url;
         } else {
-          throw new Error(res.message || 'Online payment failed')
+          throw new Error(res.message || "Online payment failed");
         }
       } else {
-        const res = await payCashOrder(cartId, values)
+        const res = await payCashOrder(cartId, values);
 
-        if (res.status === 'success') {
-          toast.success('Order placed successfully')
-          window.location.href = '/'
+        if (res.status === "success") {
+          toast.success("Order placed successfully");
+          window.location.href = "/";
         } else {
-          throw new Error(res.message || 'Cash order failed')
+          throw new Error(res.message || "Cash order failed");
         }
       }
     } catch (err: any) {
-      toast.error(err.message || 'Something went wrong')
+      toast.error(err.message || "Something went wrong");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -63,7 +62,6 @@ export default function CheckoutForm({ cartId }: { cartId: string }) {
         </div>
 
         <form onSubmit={form.handleSubmit(submitForm)} className="space-y-4">
-          {/* DETAILS */}
           <Controller
             name="details"
             control={form.control}
@@ -78,7 +76,6 @@ export default function CheckoutForm({ cartId }: { cartId: string }) {
             )}
           />
 
-          {/* CITY */}
           <Controller
             name="city"
             control={form.control}
@@ -93,7 +90,6 @@ export default function CheckoutForm({ cartId }: { cartId: string }) {
             )}
           />
 
-          {/* PHONE */}
           <Controller
             name="phone"
             control={form.control}
@@ -108,33 +104,37 @@ export default function CheckoutForm({ cartId }: { cartId: string }) {
             )}
           />
 
-          {/* ACTIONS */}
           <div className="pt-4 space-y-3">
-            <Button
+            <button
               type="button"
-              variant={paymentMethod === 'cash' ? 'default' : 'outline'}
-              onClick={() => setPaymentMethod('cash')}
-              className="w-full"
+              onClick={() => setPaymentMethod("cash")}
+              className={`w-full border-2 rounded-full ${
+                paymentMethod === "cash"
+                  ? "border-dashed border-[#800020] text-[#800020]"
+                  : "border-muted"
+              }`}
             >
               Pay Cash
-            </Button>
+            </button>
 
-            <Button
+            <button
               type="button"
-              variant={paymentMethod === 'online' ? 'default' : 'outline'}
-              onClick={() => setPaymentMethod('online')}
-              className="w-full"
+              onClick={() => setPaymentMethod("online")}
+              className={`w-full border-2 rounded-full  ${
+                paymentMethod === "online"
+                  ? "border-dashed border-[#800020] text-[#800020]"
+                  : "border-muted"
+              }`}
             >
               Pay Online
-            </Button>
+            </button>
 
-            {/* ✅ ده اللي كان مكسور */}
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Processing...' : 'Confirm Order'}
+              {isLoading ? "Processing..." : "Confirm Order"}
             </Button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

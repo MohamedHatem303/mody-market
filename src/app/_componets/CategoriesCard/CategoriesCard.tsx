@@ -1,17 +1,12 @@
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Image from "next/image"
-import Link from "next/link"
-import { categories } from "@/types/categoriesInterface"
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
+import { categories } from "@/types/categoriesInterface";
 
 export function CategoriesCard({ Categorie }: { Categorie: categories }) {
   return (
     <Card className="group relative mx-auto w-full max-w-sm overflow-hidden border card-hover">
-      
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
         <Image
           fill
@@ -60,7 +55,6 @@ export function CategoriesCard({ Categorie }: { Categorie: categories }) {
           </Button>
         </div>
       </CardHeader>
-
     </Card>
-  )
+  );
 }

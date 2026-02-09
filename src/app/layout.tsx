@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navpar from "./_componets/navpar/navpar";
 import Footer from "./_componets/footer/footer";
-import {Toaster}  from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import NextauthProvider from "./providers/nextauthProvider";
 import Providers from "./providers/react-query-provider";
 
@@ -38,12 +38,10 @@ export default function RootLayout({
       >
         <Providers>
           <NextauthProvider>
-              <Toaster/>
-              <Navpar /> 
-                <div className="container mx-auto max-w-7xl">
-                  {children}
-                </div>
-              <Footer />
+            <Toaster />
+            <Navpar />
+            <div className="container mx-auto max-w-7xl">{children}</div>
+            <Footer />
           </NextauthProvider>
         </Providers>
       </body>

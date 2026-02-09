@@ -1,22 +1,24 @@
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Link from "next/link"
-import { subCategorieItem } from "@/types/subCategorieInterface"
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { subCategorieItem } from "@/types/subCategorieInterface";
 
-export function SubCategoriesCard({ SubCategorie }: { SubCategorie: subCategorieItem }) {
+export function SubCategoriesCard({
+  SubCategorie,
+}: {
+  SubCategorie: subCategorieItem;
+}) {
   return (
     <Card className="group relative mx-auto w-full max-w-sm border card-hover">
-      
       <CardHeader className="space-y-4 text-center">
         <CardTitle className="text-lg font-semibold">
           {SubCategorie?.name}
         </CardTitle>
 
-        <Button variant="outline" className="w-full gap-2 bg-[#5a0f1b] text-white">
+        <Button
+          variant="outline"
+          className="w-full gap-2 bg-[#5a0f1b] text-white"
+        >
           <Link
             href={`/products?category=${SubCategorie?.category}`}
             className="flex items-center justify-center gap-2 w-full"
@@ -39,7 +41,6 @@ export function SubCategoriesCard({ SubCategorie }: { SubCategorie: subCategorie
           </Link>
         </Button>
       </CardHeader>
-
     </Card>
-  )
+  );
 }

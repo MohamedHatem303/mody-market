@@ -13,7 +13,6 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Pagination
   const [page, setPage] = useState(1);
   const limit = 20;
 
@@ -50,13 +49,11 @@ export default function ProductsPage() {
   }, [brand, category, page]);
 
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}, [page]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-
-      {/* Loading Skeleton */}
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {Array.from({ length: 10 }).map((_, i) => (
@@ -68,7 +65,6 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {/* Empty State */}
       {!loading && products.length === 0 && (
         <div className="text-center py-20">
           <h2 className="text-lg font-medium">No products found</h2>
@@ -86,7 +82,6 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {/* Products Grid */}
       {!loading && products.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {products.map((prod) => (
@@ -100,10 +95,8 @@ export default function ProductsPage() {
         </div>
       )}
 
-      {/* Pagination */}
       {!loading && products.length > 0 && (
         <div className="flex justify-center items-center gap-4 mt-12">
-
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
@@ -112,9 +105,7 @@ export default function ProductsPage() {
             Previous
           </button>
 
-          <span className="text-sm font-medium">
-            Page {page}
-          </span>
+          <span className="text-sm font-medium">Page {page}</span>
 
           <button
             onClick={() => setPage((p) => p + 1)}
@@ -122,10 +113,8 @@ export default function ProductsPage() {
           >
             Next
           </button>
-
         </div>
       )}
-
     </div>
   );
 }
